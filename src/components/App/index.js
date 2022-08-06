@@ -1,5 +1,5 @@
 import moment  from "moment";
-import { Header } from "../Header";
+import { Title } from "../Title";
 import { Monitor } from "../Monitor";
 import { CalendarGrid } from "../CalendarGrid";
 import styled from "styled-components";
@@ -17,13 +17,15 @@ function App() {
     week: {dow: 1}
   });
 
-  const startDay = moment().startOf('month').startOf('week');
+  const today = moment();
+  const startDay = today.clone().startOf('month').startOf('week');
   
+  window.moment = moment;
   return (
     <ShadowWrapper>
-      <Header />
-      <Monitor />
-      <CalendarGrid startDay={startDay}/>
+      <Title />
+      <Monitor today={today} />
+      <CalendarGrid startDay={startDay} />
 
     </ShadowWrapper>
   );

@@ -1,9 +1,56 @@
 import React from 'react';
+import styled from 'styled-components';
 
-const Monitor = () => {
-    <div>
+const DivWrapper = styled.div`
+    display: flex;
+    justify-content: space-between;
+    background-color: #1e1f21;
+    color: #dcdddd;
+    padding: 16px;
+`;
 
-    </div>
-}
+const TextWrapper = styled.span`
+    font-size: 32px;
+    margin-right: 8px;
+`;
+
+const TitleWrapper = styled(TextWrapper)`
+    font-weight: bold;
+`;
+
+const ButtonsWrapper = styled('div')`
+        display: flex;
+        align-items: center;
+`;
+
+const ButtonWrapper = styled('button')`
+    border: unset;
+    background-color: #565759;
+    height: 20px;
+    margin-right: 2px;
+    border-radius: 4px;
+    color: #e6e6e6;
+`;
+
+const TodayButton = styled(ButtonWrapper)`
+    padding-right: 16px;
+    padding-left: 16px;
+    font-weight: bold;
+`;
+
+const Monitor = ({today}) => (
+    <DivWrapper>
+        <div>
+            <TitleWrapper>{today.format('MMMM')}</TitleWrapper>
+            <TextWrapper>{today.format('YYYY')}</TextWrapper>
+        </div>
+        <ButtonsWrapper>
+            <ButtonWrapper> &lt; </ButtonWrapper>
+            <ButtonWrapper>today</ButtonWrapper>
+            <ButtonWrapper> &gt; </ButtonWrapper>
+        </ButtonsWrapper>
+    </DivWrapper>
+);
+
 
 export { Monitor };
