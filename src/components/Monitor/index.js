@@ -38,16 +38,16 @@ const TodayButton = styled(ButtonWrapper)`
     font-weight: bold;
 `;
 
-const Monitor = ({today}) => (
+const Monitor = ({today, prevHandler, todayHandler, nextHandler}) => (
     <DivWrapper>
         <div>
             <TitleWrapper>{today.format('MMMM')}</TitleWrapper>
             <TextWrapper>{today.format('YYYY')}</TextWrapper>
         </div>
         <ButtonsWrapper>
-            <ButtonWrapper> &lt; </ButtonWrapper>
-            <ButtonWrapper>today</ButtonWrapper>
-            <ButtonWrapper> &gt; </ButtonWrapper>
+            <ButtonWrapper onClick={prevHandler}> &lt; </ButtonWrapper>
+            <ButtonWrapper onClick={todayHandler}>today</ButtonWrapper>
+            <ButtonWrapper onClick={nextHandler}> &gt; </ButtonWrapper>
         </ButtonsWrapper>
     </DivWrapper>
 );
