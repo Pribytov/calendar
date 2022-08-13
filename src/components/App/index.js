@@ -45,7 +45,7 @@ function App() {
         todayHandler={todayHandler}
         nextHandler={nextHandler}
       />
-      <CalendarGrid startDay={startDay} />
+      <CalendarGrid startDay={startDay} today={today }/>
 
     </ShadowWrapper>
   );
