@@ -3,7 +3,7 @@ import { Title } from "../Title";
 import { Monitor } from "../Monitor";
 import { CalendarGrid } from "../CalendarGrid";
 import styled from "styled-components";
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 const ShadowWrapper = styled.div`
   border: 1px solid #464648;
@@ -11,6 +11,9 @@ const ShadowWrapper = styled.div`
   overflow: hidden;
   box-shadow: 0 0 0 1px #1a1a1a, 0 8px 20px 6px #888;
 `;
+
+const url = 'http://localhost:3004';
+const totalDays = 42;
 
 function App() {
  
@@ -21,7 +24,7 @@ function App() {
   //const today = moment();
   const [today, setToday] = useState(moment());
   const startDay = today.clone().startOf('month').startOf('week');
-  
+
   window.moment = moment;
 
   const prevHandler = () => {
@@ -36,6 +39,16 @@ function App() {
     setToday(prev => prev.clone().add(1, 'month'));
   };
 
+  const [events, setEvents] = useState([]);
+  const startDateQuery = startDay.clone().format('X');
+  const endDateQuery = startDay.clone().add(totalDays, 'days').format('X');
+
+  useEffect(() => {
+    fetch(`${url}/events?date_gte=${startDateQuery}&date_lte=${endDateQuery}`)
+     .then(res => res.json())
+     .then(res => setEvents(res));
+  }, [today]);
+
   return (
     <ShadowWrapper>
       <Title />
@@ -45,7 +58,7 @@ function App() {
         todayHandler={todayHandler}
         nextHandler={nextHandler}
       />
-      <CalendarGrid startDay={startDay} today={today }/>
+      <CalendarGrid startDay={startDay} today={today} totalDays={totalDays} events={events}/>
 
     </ShadowWrapper>
   );

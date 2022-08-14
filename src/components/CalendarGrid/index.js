@@ -20,6 +20,7 @@ const CellWrapper = styled.div`
 
 const RowInCell = styled.div`
     display: flex;
+    flex-direction: column;
     justify-content: ${props => props.justifyContent ? props.justifyContent : 'flex-start'};
     ${props => props.pr && `padding-right: ${props.pr * 8}px;`};
 `;
@@ -43,8 +44,34 @@ const CarrentDay = styled('div')`
     align-items: center;
 `;
 
-const CalendarGrid = ({startDay, today}) => {
-    const totalDays = 42;
+const ShowDayWrapper = styled('div')`
+    display: flex;
+    justify-content: flex-end;
+`;
+
+const EventListWrapper = styled('ul')`
+    margin: unset;
+    list-style-position: inside;
+    padding-left: 4px;
+`;
+
+const EventItemWrapper = styled('button')`
+    position: relative;
+    left: -14px;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 115px;
+    border: unset;
+    background: unset;
+    color: #dddddd;
+    cursor: pointer;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+`;
+
+const CalendarGrid = ({startDay, today, totalDays, events}) => {
     const day = startDay.subtract(1, 'day').clone();
     console.log(day);
     const daysArray = [...Array(42)].map(() => day.add(1, 'day').clone());
@@ -79,10 +106,31 @@ const CalendarGrid = ({startDay, today}) => {
                             isSelectedMonth={isSelectedMonth(dayItem)}
                         >
                             <RowInCell justifyContent={'flex-end'}>
-                                <DayWrapper>
-                                    {!isCurrentDay(dayItem) &&  dayItem.format('D')}
-                                    {isCurrentDay(dayItem) && <CarrentDay>  {dayItem.format('D')}</CarrentDay>}
-                                </DayWrapper>
+                                <ShowDayWrapper>
+                                    <DayWrapper>
+                                        {
+                                            isCurrentDay(dayItem) ?
+                                            <CarrentDay>  {dayItem.format('D')}</CarrentDay> :
+                                            dayItem.format('D')
+                                        }
+                                    </DayWrapper>
+                                </ShowDayWrapper>
+                                <div>
+                                    <EventListWrapper>
+                                        {
+                                            events
+                                                .filter(event  => event.date >= dayItem.format('X')
+                                                    && event.date <= dayItem.clone().endOf('day').format('X'))
+                                                .map(event =>
+                                                    <li key={event.id}>
+                                                        <EventItemWrapper>
+                                                            {event.title}
+                                                        </EventItemWrapper>
+                                                    </li>
+                                                )
+                                        }
+                                    </EventListWrapper>
+                                </div>
                             </RowInCell>
                         </CellWrapper>
                     ))
