@@ -106,9 +106,9 @@ function App() {
      .then(res => setEvents(res));
   }, [today]);
 
-  const openFormHandler = (methodName, eventForUpdate) => {
+  const openFormHandler = (methodName, eventForUpdate, dayItem) => {
     setShowForm(true);
-    setEvent(eventForUpdate || defaultEvent);
+    setEvent(eventForUpdate || {...defaultEvent, date: dayItem.format('X')});
     setMethod(methodName);
   };
 

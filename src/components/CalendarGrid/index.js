@@ -107,7 +107,7 @@ const CalendarGrid = ({startDay, today, totalDays, events, openFormHandler}) => 
                         >
                             <RowInCell justifyContent={'flex-end'}>
                                 <ShowDayWrapper>
-                                    <DayWrapper onDoubleClick={() => openFormHandler('Create')}>
+                                    <DayWrapper onDoubleClick={() => openFormHandler('Create', null, dayItem)}>
                                         {
                                             isCurrentDay(dayItem) ?
                                             <CarrentDay>  {dayItem.format('D')}</CarrentDay> :
