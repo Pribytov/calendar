@@ -26,7 +26,7 @@ const FormPositionWrapper = styled('div')`
 `;
 
 const FormWrapper = styled(ShadowWrapper)`
-  width: 200px;
+  width: 320px;
   background-color: #1e1f21;
   color: #dddddd;
   box-shadow: unset;
@@ -43,7 +43,7 @@ const EventTitle = styled('input')`
   border-bottom: 1px solid #464648;
 `;
 
-const EventBody = styled('input')`
+const EventBody = styled('textarea')`
   padding: 4px 14px;
   font-size: .85rem;
   width: 100%;
@@ -52,6 +52,8 @@ const EventBody = styled('input')`
   color: #dddddd;
   outline: unset;
   border-bottom: 1px solid #464648;
+  resize: none;
+  height: 68px;
 `;
 
 const ButtonsWrapper = styled('div')`
@@ -147,6 +149,23 @@ function App() {
       })
   };
 
+  const removeEventHandler = () => {
+    fetch(`${url}/events/${event.id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    })
+      .then(res => res.json())
+      .then(res => {
+        setEvents(prevState => prevState.filter(eventEl => eventEl.id !== event.id))
+        console.log(event.id, res.id);
+        debugger
+        cancelButtonHandler();
+      })
+  }
+
   return (
     <>
       {
@@ -164,6 +183,11 @@ function App() {
               <ButtonsWrapper>
                 <button onClick={cancelButtonHandler}>Cancel</button>
                 <button onClick={eventFetchHandler}>{method}</button>
+                {
+                  method === 'Update' ?
+                    <button onClick={removeEventHandler}>Remove</button> :
+                    null
+                }
               </ButtonsWrapper>
             </FormWrapper>
           </FormPositionWrapper>
