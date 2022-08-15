@@ -71,11 +71,11 @@ const EventItemWrapper = styled('button')`
     text-align: left;
 `;
 
-const CalendarGrid = ({startDay, today, totalDays, events}) => {
+const CalendarGrid = ({startDay, today, totalDays, events, openFormHandler}) => {
     const day = startDay.subtract(1, 'day').clone();
-    console.log(day);
+    //console.log(day);
     const daysArray = [...Array(42)].map(() => day.add(1, 'day').clone());
-    console.log(daysArray);
+    //console.log(daysArray);
      
     const isCurrentDay = (day) => (
         moment().isSame(day, 'day')
@@ -89,7 +89,7 @@ const CalendarGrid = ({startDay, today, totalDays, events}) => {
         <>
             <GridWrapper isHeader>
                 {[...Array(7)].map((_, i) => (
-                    <CellWrapper isHeader isSelectedMonth>
+                    <CellWrapper isHeader isSelectedMonth key={i}>
                         <RowInCell justifyContent={'flex-end'} pr={1}>
                             {moment().day(i+1).format('ddd')}
                         </RowInCell>
@@ -107,7 +107,7 @@ const CalendarGrid = ({startDay, today, totalDays, events}) => {
                         >
                             <RowInCell justifyContent={'flex-end'}>
                                 <ShowDayWrapper>
-                                    <DayWrapper>
+                                    <DayWrapper onDoubleClick={() => openFormHandler('Create')}>
                                         {
                                             isCurrentDay(dayItem) ?
                                             <CarrentDay>  {dayItem.format('D')}</CarrentDay> :
@@ -123,7 +123,7 @@ const CalendarGrid = ({startDay, today, totalDays, events}) => {
                                                     && event.date <= dayItem.clone().endOf('day').format('X'))
                                                 .map(event =>
                                                     <li key={event.id}>
-                                                        <EventItemWrapper>
+                                                        <EventItemWrapper onDoubleClick={() => openFormHandler('Update', event)}>
                                                             {event.title}
                                                         </EventItemWrapper>
                                                     </li>

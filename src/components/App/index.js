@@ -12,8 +12,61 @@ const ShadowWrapper = styled.div`
   box-shadow: 0 0 0 1px #1a1a1a, 0 8px 20px 6px #888;
 `;
 
+const FormPositionWrapper = styled('div')`
+  position: absolute;
+  z-index: 100;
+  background-color: rgba(0, 0, 0, 0.35);
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const FormWrapper = styled(ShadowWrapper)`
+  width: 200px;
+  background-color: #1e1f21;
+  color: #dddddd;
+  box-shadow: unset;
+`;
+
+const EventTitle = styled('input')`
+  padding: 4px 14px;
+  font-size: .85rem;
+  width: 100%;
+  border: unset;
+  background-color: #1e1f21;
+  color: #dddddd;
+  outline: unset;
+  border-bottom: 1px solid #464648;
+`;
+
+const EventBody = styled('input')`
+  padding: 4px 14px;
+  font-size: .85rem;
+  width: 100%;
+  border: unset;
+  background-color: #1e1f21;
+  color: #dddddd;
+  outline: unset;
+  border-bottom: 1px solid #464648;
+`;
+
+const ButtonsWrapper = styled('div')`
+  padding: 8px 14px;
+  display: flex;
+  justify-content: end;
+`;
+
 const url = 'http://localhost:3004';
 const totalDays = 42;
+const defaultEvent = {
+  title: '',
+  description: '',
+  date: moment().format('X')
+};
 
 function App() {
  
@@ -39,6 +92,10 @@ function App() {
     setToday(prev => prev.clone().add(1, 'month'));
   };
 
+  const [method, setMethod] = useState(null);
+  const [isShowForm, setShowForm] = useState(false);
+  const [event, setEvent] = useState(null);
+
   const [events, setEvents] = useState([]);
   const startDateQuery = startDay.clone().format('X');
   const endDateQuery = startDay.clone().add(totalDays, 'days').format('X');
@@ -49,18 +106,61 @@ function App() {
      .then(res => setEvents(res));
   }, [today]);
 
-  return (
-    <ShadowWrapper>
-      <Title />
-      <Monitor
-        today={today}
-        prevHandler={prevHandler}
-        todayHandler={todayHandler}
-        nextHandler={nextHandler}
-      />
-      <CalendarGrid startDay={startDay} today={today} totalDays={totalDays} events={events}/>
+  const openFormHandler = (methodName, eventForUpdate) => {
+    setShowForm(true);
+    setEvent(eventForUpdate || defaultEvent);
+    setMethod(methodName);
+    // console.log(event);
+    // console.log(event.id);
+    // console.log(event.title);
+  };
 
-    </ShadowWrapper>
+  const cancelButtonHandler = () => {
+    setShowForm(false);
+    setEvent(null);
+  };
+
+  const changeEventHandler = (text, field) => {
+    setEvent(prevState => ({
+      ...prevState,
+      [field]: text
+    }))
+  };
+
+  return (
+    <>
+      {
+        isShowForm ? (
+          <FormPositionWrapper onClick={cancelButtonHandler}>
+            <FormWrapper onClick={e => e.stopPropagation()}>
+              <EventTitle
+                value={event.title}
+                onChange={e => changeEventHandler(e.target.value, 'title')}
+              />
+              <EventBody
+                value={event.description}
+                onChange={e => changeEventHandler(e.target.value, 'description')}
+              />
+              <ButtonsWrapper>
+                <button onClick={cancelButtonHandler}>Cancel</button>
+                <button>{method}</button>
+              </ButtonsWrapper>
+            </FormWrapper>
+          </FormPositionWrapper>
+        ) : null
+      }
+      <ShadowWrapper>
+        <Title />
+        <Monitor
+          today={today}
+          prevHandler={prevHandler}
+          todayHandler={todayHandler}
+          nextHandler={nextHandler}
+        />
+        <CalendarGrid startDay={startDay} today={today} totalDays={totalDays} events={events} openFormHandler={openFormHandler}/>
+
+      </ShadowWrapper>
+    </>
   );
 }
 
