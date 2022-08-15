@@ -110,9 +110,6 @@ function App() {
     setShowForm(true);
     setEvent(eventForUpdate || defaultEvent);
     setMethod(methodName);
-    // console.log(event);
-    // console.log(event.id);
-    // console.log(event.title);
   };
 
   const cancelButtonHandler = () => {
@@ -125,6 +122,29 @@ function App() {
       ...prevState,
       [field]: text
     }))
+  };
+
+  const eventFetchHandler = () => {
+    const fetchUrl = method === 'Update' ? `${url}/events/${event.id}` : `${url}/events`;
+    const httpMethod = method === 'Update' ? 'PATCH' : 'POST';
+
+    fetch(fetchUrl, {
+      method: httpMethod,
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(event)
+    })
+      .then(res => res.json())
+      .then(res => {
+        console.log(res);
+        if (method === 'Update'){
+          setEvents(prevState => prevState.map(eventEl => eventEl.id === res.id ? res : eventEl));
+        } else {
+          setEvents(prevState => [...prevState, res]);
+        }
+        cancelButtonHandler();
+      })
   };
 
   return (
@@ -143,7 +163,7 @@ function App() {
               />
               <ButtonsWrapper>
                 <button onClick={cancelButtonHandler}>Cancel</button>
-                <button>{method}</button>
+                <button onClick={eventFetchHandler}>{method}</button>
               </ButtonsWrapper>
             </FormWrapper>
           </FormPositionWrapper>
